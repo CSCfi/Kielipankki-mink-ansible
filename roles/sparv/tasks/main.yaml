@@ -1,0 +1,38 @@
+---
+
+- name: "Ensure directories"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    group: clarin
+    mode: "u+rwx,g+rwxs,o+rx"
+  loop:
+    - "{{ sparv_dir }}"
+    - "{{ sparv_dir }}/test"
+    - "{{ data_root }}/sparv"
+
+- name: Install sparv, pin dependencies due to sparv reqs
+  ansible.builtin.pip:
+    name: "{{ item }}"
+    virtualenv: "{{ sparv_dir }}/venv"
+  loop:
+    - torch==2.5.1
+    - sparv-pipeline
+
+- name: Configure sparv datadir
+  ansible.builtin.shell: |
+    source {{ sparv_dir }}/venv/bin/activate &&
+    sparv setup --dir {{ data_root }}/sparv
+    
+- name: Fetch example corpora
+  ansible.builtin.unarchive:
+    dest: "{{ sparv_dir }}/test"
+    remote_src: true
+    src: "{{ sparv_example_corpora_url }}"
+    creates: "{{ sparv_dir }}/test/example_corpora"
+
+- name: Install cwb
+  shell: |
+    command -v cwb-encode > /dev/null ||
+    { curl -L -o /tmp/cwb.rpm {{ cwb_rpm_url }} ; dnf localinstall -y /tmp/cwb.rpm;
+    ln -sf /usr/share/cwb/registry/ {{ cwb_registry }}; }

@@ -1,0 +1,5 @@
+---
+
+cwb_registry: /data/cwb_registry
+cwb_rpm_url: https://sourceforge.net/projects/cwb/files/cwb/cwb-3.5/rpm/cwb-3.5.0-1.fc35.x86_64.rpm/download
+sparv_example_corpora_url: https://github.com/spraakbanken/sparv-pipeline/releases/latest/download/example_corpora.zip

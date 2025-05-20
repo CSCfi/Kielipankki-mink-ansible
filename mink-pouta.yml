@@ -1,0 +1,59 @@
+---
+
+- name: Create Pouta VM
+  tags: provision
+  ansible.builtin.import_playbook: pouta-vm.yml
+
+- name: Configure server
+  hosts: mink
+  become: true
+  tags: setup
+  tasks:
+    - name: Set timezone
+      community.general.timezone:
+        name: "Europe/Helsinki"
+        
+    - name: "Add clarin group"
+      ansible.builtin.group:
+        name: clarin
+        state: present
+
+    - name: "Ensure directories"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        group: clarin
+        mode: "u+rwx,g+rwxs,o+rx"
+      loop:
+        - "{{ data_root }}"
+
+    - name: "Install core packages"
+      ansible.builtin.dnf:
+        name:
+          - git
+          - gcc
+          - pip
+          - python3-virtualenv
+          - python3-devel
+          - unzip
+          - perl
+          
+    - name: "Install dev packages"
+      ansible.builtin.dnf:
+        name:
+          - ripgrep
+          - emacs
+          - vim
+          
+- name: Install software
+  hosts: mink
+  become: true
+  roles:
+    - role: sparv
+      tags: sparv
+    - role: mink-backend
+      tags: mink-backend
+    - role: mink-frontend
+      tags: mink-frontend
+    # - role: firewall
+    #   tags: firewall

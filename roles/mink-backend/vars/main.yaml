@@ -1,0 +1,4 @@
+---
+
+mink_backend_repo: https://github.com/CSCfi/Kielipankki-mink-backend.git
+mink_backend_version: KP-7710-mock-auth

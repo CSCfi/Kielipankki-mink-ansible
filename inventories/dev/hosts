@@ -1,0 +1,19 @@
+all:
+  vars:
+    external_ip: 195.148.30.10
+  hosts:
+    localhost:
+      ansible_connection: local
+      floating_ip: "{{ external_ip }}"
+      vm_name_postfix: dev
+      ansible_python_interpreter: python
+      own_network: clarin
+      additional_authorized_users:
+        - janiemi
+        - eaxelson
+    mink:
+      ansible_host: "{{ external_ip }}"
+      ansible_user: almalinux
+      allowed_ips:
+        - 195.148.30.210 # proxy prod
+        - 195.148.30.109 # proxy pre-prod

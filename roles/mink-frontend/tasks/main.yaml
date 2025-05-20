@@ -1,0 +1,47 @@
+---
+
+- name: Install mkcert binary (no AlmaLinux package available)
+  ansible.builtin.shell: |
+    command -v mkcert > /dev/null ||
+    { curl -L -o /usr/local/bin/mkcert https://dl.filippo.io/mkcert/latest?for=linux/amd64;
+    chmod +x /usr/local/bin/mkcert; }
+
+- name: Add yarn repository
+  ansible.builtin.yum_repository:
+    name: yarn
+    description: Yarn YUM repo
+    baseurl: https://dl.yarnpkg.com/rpm/
+    gpgcheck: true
+    gpgkey: https://dl.yarnpkg.com/rpm/pubkey.gpg
+
+- name: Add nodejs repository
+  ansible.builtin.shell:
+    cmd: curl -sL https://rpm.nodesource.com/setup_18.x | bash -
+    creates: /etc/yum.repos.d/nodesource-nodejs.repo
+
+- name: Install packages
+  ansible.builtin.dnf:
+    name:
+      - nss-tools
+      - nodejs
+      - yarn
+    state: present
+
+- name: Fetch mink frontend repo
+  ansible.builtin.git:
+    repo: "{{ mink_frontend_repo }}"
+    version: "{{ mink_frontend_version }}"
+    dest: "{{ mink_frontend_dir }}"
+    umask: "0022"
+
+- name: Install npm packages
+  community.general.npm:
+    name: "{{ item }}"
+    global: true
+    path: "{{ mink_frontend_dir }}"
+  loop:
+    - newman
+
+- name: Run yarn
+  community.general.yarn:
+    path: "{{ mink_frontend_dir }}"

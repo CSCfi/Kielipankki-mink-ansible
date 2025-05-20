@@ -1,0 +1,44 @@
+---
+
+- name: Create virtual machine on cPouta
+  hosts: localhost
+  remote_user: almalinux
+  become: false
+  roles:
+    - role: kielipankki.common.create_instances
+      tags: create_instances
+  vars:
+    instance_name: 'korp'
+    pouta_instance_name: "{{ instance_name }}-{{ vm_name_postfix }}"
+    std_image: "AlmaLinux-9"
+    project_key: "kielipouta"
+    project_sg: "korp-dev-sg"
+    project_security_groups: "default,{{ project_sg }}" # don't add spaces here!
+    network: "{{ own_network | default('clarin') }}"
+
+    servers:
+      - name: "{{ pouta_instance_name }}"
+        image: "{{ std_image }}"
+        flavor: standard.large
+        key_name: "{{ project_key }}"
+        security_groups: "{{ project_security_groups }}"
+        network: "{{ network }}"
+        meta:
+          hostname: "{{ pouta_instance_name }}"
+          group: "{{ instance_name }}"
+
+    security_group_rules:
+
+      - name: http
+        protocol: tcp
+        port: 80
+        allowed_ips:
+          - "192.168.1.0/24" # pouta local network
+
+    base_authorized_users:
+      - ktegel
+      - ajarven
+      - matthies
+      - shardwic
+
+    authorized_users: "{{ base_authorized_users + (additional_authorized_users | default([])) }}"

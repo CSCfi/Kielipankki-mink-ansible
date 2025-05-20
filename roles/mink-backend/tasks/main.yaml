@@ -1,0 +1,29 @@
+---
+
+- name: Install packages
+  ansible.builtin.dnf:
+    name:
+      - memcached
+
+- name: Fetch repo
+  ansible.builtin.git:
+    repo: "{{ mink_backend_repo }}"
+    version: "{{ mink_backend_version }}"
+    dest: "{{ mink_backend_dir }}"
+    umask: "0022"
+
+- name: Install requirements
+  ansible.builtin.pip:
+    requirements: "{{ mink_backend_dir }}/requirements.txt"
+    virtualenv: "{{ mink_backend_dir }}/venv"
+
+- name: Create dirs
+  ansible.builtin.file:
+    state: directory
+    path: "{{ mink_backend_dir }}/instance/logs"
+    
+- name: Install config
+  ansible.builtin.template:
+    src: config.py.j2
+    dest: "{{ mink_backend_dir }}/instance/config.py"
+
