@@ -1,4 +1,4 @@
 # Configure reverse proxy for the Korp backend
 ProxyPreserveHost On
-ProxyPass "/mink/api" "unix:{{ mink_backend_socket }}|http://127.0.0.1" retry=0
-ProxyPassReverse "/mink/api" "unix:{{ mink_backend_socket }}|http://127.0.0.1"
+ProxyPass "/mink/api" "unix:{{ mink_backend_socket_path }}|http://127.0.0.1" retry=0
+ProxyPassReverse "/mink/api" "unix:{{ mink_backend_socket_path }}|http://127.0.0.1"
