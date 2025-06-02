@@ -42,6 +42,20 @@
   loop:
     - newman
 
+- name: Install .env.local
+  ansible.builtin.template:
+    src: "env.local"
+    dest: "{{ mink_frontend_dir }}/.env.local"
+
 - name: Run yarn
-  community.general.yarn:
-    path: "{{ mink_frontend_dir }}"
+  ansible.builtin.command:
+    cmd: "yarn {{ item }}"
+    chdir: "{{ mink_frontend_dir }}"
+  loop:
+    - install
+    - build
+
+- name: Install site
+  ansible.builtin.command:
+    cmd: "rsync --archive --delete dist/ /var/www/html/mink"
+    chdir: "{{ mink_frontend_dir }}"

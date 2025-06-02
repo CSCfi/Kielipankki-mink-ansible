@@ -5,3 +5,5 @@ data_root: /data
 mink_backend_dir: "{{ app_dir }}/mink-backend"
 mink_frontend_dir: "{{ app_dir }}/mink-frontend"
 sparv_dir: "{{ app_dir }}/sparv"
+
+mink_backend_socket_path: /run/mink-backend
