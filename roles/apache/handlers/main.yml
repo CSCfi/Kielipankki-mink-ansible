@@ -1,0 +1,11 @@
+---
+
+- name: restart httpd
+  ansible.builtin.service:
+    name: httpd
+    state: restarted
+    enabled: yes
+
+- name: graceful httpd
+  command: apachectl -k graceful
+

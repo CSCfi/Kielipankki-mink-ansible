@@ -49,6 +49,8 @@
   hosts: mink
   become: true
   roles:
+    - role: apache
+      tags: apache
     - role: sparv
       tags: sparv
     - role: mink-backend

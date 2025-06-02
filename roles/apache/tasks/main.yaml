@@ -1,0 +1,21 @@
+---
+
+- name: Install httpd
+  ansible.builtin.dnf:
+    name:
+      - httpd
+      - mod_proxy_html
+    state: present
+
+- name: Start httpd
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: yes
+    
+- name: Install configurations
+  ansible.builtin.template:
+    - src: backend_proxy.conf.j2
+    - dest: /etc/httpd/conf.d/backend.proxy.conf
+  notify: restart httpd
+
