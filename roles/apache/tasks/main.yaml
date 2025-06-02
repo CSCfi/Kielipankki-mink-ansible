@@ -15,7 +15,7 @@
     
 - name: Install configurations
   ansible.builtin.template:
-    - src: backend_proxy.conf.j2
-    - dest: /etc/httpd/conf.d/backend.proxy.conf
+    src: backend_proxy.conf.j2
+    dest: /etc/httpd/conf.d/backend.proxy.conf
   notify: restart httpd
 
