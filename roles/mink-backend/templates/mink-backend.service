@@ -1,0 +1,26 @@
+[Unit]
+Description=mink gunicorn daemon
+Requires=mink-backend.socket memcached.service
+After=network.target
+Also=mink-manager.service
+
+[Service]
+Type=notify
+# .
+# the specific user that our service will run as
+User=gunicorn
+Group=gunicorn
+# another option for an even more restricted service is
+# DynamicUser=yes
+# see http://0pointer.net/blog/dynamic-users-with-systemd.html
+RuntimeDirectory=gunicorn
+WorkingDirectory={{ mink_backend_dir }}
+ExecStart={{ mink_backend_dir }}/venv/bin/gunicorn --workers 2 --limit-request-line 0 run:create_app()
+# Can try: --worker-class gevent
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

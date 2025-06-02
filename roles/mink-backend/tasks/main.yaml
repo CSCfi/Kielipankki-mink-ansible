@@ -5,12 +5,22 @@
     name:
       - memcached
 
+- name: Install systemd templates
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+  loop:
+    - mink-backend.service
+    - mink-backend.socket
+    - mink-manager.service
+
 - name: Fetch repo
   ansible.builtin.git:
     repo: "{{ mink_backend_repo }}"
     version: "{{ mink_backend_version }}"
     dest: "{{ mink_backend_dir }}"
     umask: "0022"
+  notify: restart mink-backend
 
 - name: Install requirements
   ansible.builtin.pip:
@@ -26,4 +36,11 @@
   ansible.builtin.template:
     src: config.py.j2
     dest: "{{ mink_backend_dir }}/instance/config.py"
+  notify: restart mink-backend
+
+- name: start mink-backend
+  systemd:
+    name: mink-backend
+    state: started
+    enabled: yes
 

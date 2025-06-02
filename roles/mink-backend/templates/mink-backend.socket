@@ -1,0 +1,11 @@
+[Unit]
+Description=mink backend socket
+
+[Socket]
+ListenStream={{ mink_backend_socket_path }}
+SocketUser=apache
+# Optionally restrict the socket permissions even more.
+# SocketMode=600
+
+[Install]
+WantedBy=sockets.target

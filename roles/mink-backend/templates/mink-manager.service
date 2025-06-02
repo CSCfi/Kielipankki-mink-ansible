@@ -1,0 +1,20 @@
+[Unit]
+Description=mink queue manager daemon
+PartOf=mink-backend.service
+After=network.target
+
+[Service]
+Type=simple
+# the specific user that our service will run as
+User=almalinux
+Group=almalinux
+# another option for an even more restricted service is
+# DynamicUser=yes
+# see http://0pointer.net/blog/dynamic-users-with-systemd.html
+RuntimeDirectory=mink-manager
+WorkingDirectory={{ mink_backend_dir }}
+ExecStart={{ mink_backend_dir }}/venv/bin/python queue_manager.py
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

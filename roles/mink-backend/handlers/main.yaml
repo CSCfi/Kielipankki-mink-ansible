@@ -1,0 +1,17 @@
+---
+
+- name: restart systemd
+  command: systemctl daemon-reload
+
+
+- name: restart mink-backend
+  systemd:
+    name: mink-backend
+    state: restarted
+  become: yes
+
+- name: restart rsyslog
+  systemd:
+    name: rsyslog
+    state: restarted
+  become: yes
