@@ -1,4 +1,4 @@
 ---
 
 mink_frontend_repo: https://github.com/CSCfi/Kielipankki-mink-frontend.git
-mink_frontend_version: KP-7710-mock-auth
+mink_frontend_version: main
