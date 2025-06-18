@@ -1,0 +1,10 @@
+---
+
+- name: restart systemd
+  command: systemctl daemon-reload
+
+- name: restart auth
+  systemd:
+    name: auth
+    state: restarted
+  become: yes
