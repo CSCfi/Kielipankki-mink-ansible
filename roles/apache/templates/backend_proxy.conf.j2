@@ -1,4 +1,6 @@
 # Configure reverse proxy for the Mink backend
 ProxyPreserveHost On
-ProxyPass "/mink/api/" "unix:{{ mink_backend_socket_path }}|http://127.0.0.1/" retry=0
-ProxyPassReverse "/mink/api/" "unix:{{ mink_backend_socket_path }}|http://127.0.0.1/"
+ProxyPass "/mink/auth/" "unix:/run/mock-oauth.sock|http://auth.localhost/" retry=0
+ProxyPassReverse "/mink/auth/" "unix:/run/mock-oauth.sock|http://auth.localhost/"
+ProxyPass "/mink/api/" "unix:/run/mink-backend|http://api.localhost/" retry=0
+ProxyPassReverse "/mink/api/" "unix:/run/mink-backend|http://api.localhost/"

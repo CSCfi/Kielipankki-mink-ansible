@@ -13,16 +13,22 @@
       community.general.timezone:
         name: "Europe/Helsinki"
         
-    - name: "Add clarin group"
+    - name: "Add gunicorn group"
       ansible.builtin.group:
-        name: clarin
+        name: gunicorn
         state: present
+
+    - name: "Add gunicorn user"
+      ansible.builtin.user:
+        name: gunicorn
+        state: present
+        generate_ssh_key: yes
+        group: gunicorn
 
     - name: "Ensure directories"
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
-        group: clarin
         mode: "u+rwx,g+rwxs,o+rx"
       loop:
         - "{{ data_root }}"
@@ -57,5 +63,7 @@
       tags: mink-backend
     - role: mink-frontend
       tags: mink-frontend
+    - role: auth
+      tags: auth
     # - role: firewall
     #   tags: firewall

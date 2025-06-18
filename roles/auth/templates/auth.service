@@ -1,0 +1,20 @@
+[Unit]
+Description= auth service for mink
+After=network.target
+
+[Service]
+Type=simple
+# Running as root for now
+User=root
+Group=root
+# another option for more restricted service is
+# DynamicUser=yes
+# see http://0pointer.net/blog/dynamic-users-with-systemd.html
+RuntimeDirectory=auth
+ExecStart=node oauth_server.js
+ExecReload=/bin/kill -s HUP $MAINPID
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
