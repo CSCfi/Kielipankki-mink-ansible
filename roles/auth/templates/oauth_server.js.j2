@@ -26,12 +26,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(cookieParser());
 
+const fallback_redirect_uri = 'https://www.kielipankki.fi'
+
 // Serve login page
 app.get('/login', (req, res) => {
   const { redirect, client_id, state, destination } = req.query;
   
   // Use destination if provided, otherwise fall back to redirect_uri
-    const finalRedirectUri = redirect; // destination || redirect;
+    const finalRedirectUri = redirect || fallback_redirect_uri;
   
   res.send(`
     <!DOCTYPE html>
