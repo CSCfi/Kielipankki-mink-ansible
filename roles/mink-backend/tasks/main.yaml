@@ -4,6 +4,9 @@
   ansible.builtin.dnf:
     name:
       - memcached
+      - socat
+      - sqlite
+      - time
 
 - name: Install systemd templates
   ansible.builtin.template:
@@ -13,6 +16,7 @@
     - mink-backend.service
     - mink-backend.socket
     - mink-manager.service
+    - socat.service
 
 - name: Fetch repo
   ansible.builtin.git:
@@ -38,9 +42,13 @@
     dest: "{{ mink_backend_dir }}/instance/config.py"
   notify: restart mink-backend
 
-- name: start mink-backend
+- name: start services
   systemd:
-    name: mink-backend
+    name: "{{ item }}"
     state: started
     enabled: yes
+  loop:
+    - mink-backend
+    - mink-manager
+    - socat
 
