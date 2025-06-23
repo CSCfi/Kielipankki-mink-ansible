@@ -1,0 +1,4 @@
+Host korp-future
+    HostName 192.168.77.105
+    User almalinux
+    IdentityFile ~/.ssh/service_key
