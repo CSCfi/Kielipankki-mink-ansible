@@ -65,6 +65,11 @@
     comment: Mink installation key
   delegate_to: korp
 
+- name: Enable root ssh login
+  ansible.common.template:
+    src: ssh_permit_root_login.conf
+    dest: /etc/ssh/sshd_config.d/permit_root_login.conf
+
 - name: start services
   systemd:
     name: "{{ item }}"
