@@ -47,6 +47,24 @@
     src: public_key.pem
     dest: "{{ mink_backend_dir }}/instance/keys/public_key.pem"
 
+- name: Generate SSH keys
+  community.crypto.openssh_keypair:
+    path: /root/.ssh/service_key
+    type: rsa
+    size: 2048
+
+- name: Read public key
+  ansible.builtin.slurp:
+    src: /root/.ssh/service_key.pub
+  register: public_ssh_key
+
+- name: Install public key on Korp
+  ansible.posix.authorized_key:
+    user: almalinux
+    key: "{{ public_ssh_key.content | b64decode | trim }}"
+    comment: Mink installation key
+  delegate_to: korp
+
 - name: start services
   systemd:
     name: "{{ item }}"

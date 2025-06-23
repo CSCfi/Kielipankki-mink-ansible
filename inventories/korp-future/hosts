@@ -1,0 +1,14 @@
+all:
+  vars:
+    ip_address: 195.148.21.52
+  hosts:
+    localhost:
+      ansible_connection: local
+      floating_ip: "{{ ip_address }}"
+      ansible_python_interpreter: python
+    korp:
+      ansible_host: "{{ ip_address }}"
+      ansible_user: almalinux
+      korp_db_server: localhost
+      korp_db_password: "{{ lookup('passwordstore', 'lb_passwords/korp-dev/dev_korp_db_user_password') }}"
+      db_root_password: "{{ lookup('passwordstore', 'lb_passwords/korp-dev/dev_korp_db_root_password') }}"
