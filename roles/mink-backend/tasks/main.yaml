@@ -42,6 +42,11 @@
     dest: "{{ mink_backend_dir }}/instance/config.py"
   notify: restart mink-backend
 
+- name: Install auth public key
+  ansible.builtin.copy:
+    src: public_key.pem
+    dest: "{{ mink_backend_dir }}/instance/keys/public_key.pem"
+
 - name: start services
   systemd:
     name: "{{ item }}"
