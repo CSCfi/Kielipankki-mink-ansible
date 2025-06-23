@@ -15,7 +15,11 @@
     
 - name: Install configurations
   ansible.builtin.template:
-    src: backend_proxy.conf.j2
-    dest: /etc/httpd/conf.d/backend_proxy.conf
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
   notify: restart httpd
-
+  loop:
+    - src: backend_proxy.conf.j2
+      dest: /etc/httpd/conf.d/backend_proxy.conf
+    - src: frontend_routes.conf
+      dest: /etc/httpd/conf.d/frontend_routes.conf
