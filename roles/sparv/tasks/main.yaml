@@ -22,7 +22,7 @@
 - name: Configure sparv datadir
   ansible.builtin.shell: |
     source {{ sparv_dir }}/venv/bin/activate &&
-    sparv setup --dir {{ data_root }}/sparv
+    sparv setup --dir /root/sparv-pipeline
     
 - name: Fetch example corpora
   ansible.builtin.unarchive:
