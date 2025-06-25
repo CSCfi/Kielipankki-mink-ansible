@@ -1,12 +1,12 @@
 ---
 
-- name: "Ensure mock auth directory"
+- name: "Ensure auth directory"
   ansible.builtin.file:
     path: "{{ auth_dir }}"
     state: directory
     mode: "u+rwx,g+rwxs,o+rx"
       
-- name: "Install mock auth server"
+- name: "Install auth server"
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ auth_dir }}/{{ item.dest }}"
@@ -25,16 +25,16 @@
     dest: "{{ auth_dir }}/private_key.pem"
     mode: '0600'
       
-- name: Install mock oauth dependencies
+- name: Install oauth dependencies
   community.general.npm:
     path: "{{ auth_dir }}"
 
-- name: "Install mock auth server systemd script"
+- name: "Install auth server systemd script"
   ansible.builtin.template:
     src: auth.service
     dest: /etc/systemd/system/auth.service
 
-- name: Start mock auth server
+- name: Start auth server
   systemd:
     name: auth
     state: started
