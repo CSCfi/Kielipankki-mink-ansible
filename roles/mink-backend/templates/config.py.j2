@@ -14,8 +14,8 @@ SPARV_COMMAND = (
 
 SPARV_RUN = "run --json-log --log-to-file info"
 MEMCACHED_SOCKET = "memcached.sock"
-MINK_SECRET_KEY = "no_big_secret"
-SBAUTH_API_KEY = "no_big_secret"
+MINK_SECRET_KEY = "{{ lookup('passwordstore', 'lb_passwords/mink/MINK_SECRET_KEY')}}"
+SBAUTH_API_KEY = "{{ mink_api_key }}"
 SBAUTH_PUBKEY_FILE = "keys/public_key.pem"
 SBAUTH_URL = "https://www.kielipankki.fi/future/mink/auth/resource/"
 MINK_URL = "https://www.kielipankki.fi/future/mink/api"
