@@ -1,4 +1,4 @@
 Host korp-future
-    HostName 192.168.77.105
+    HostName "{{ korp_ip }}"
     User almalinux
     IdentityFile ~/.ssh/service_key
