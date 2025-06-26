@@ -1,4 +1,43 @@
-SSH_KEY = "~/.ssh/id_rsa"
+# Obviously not how we want to do this forever..
+SSH_KEY = "~/.ssh/localroot_id_rsa"
 SPARV_HOST = "localhost"
 SPARV_USER = "root"
-MEMCACHED_SOCKET = "/var/run/memcached/memcached.sock"
+
+# Sparv's 'run' command. The default includes "--socket ~/sparv-pipeline/sparv.socket"
+# but that will only work if there's eg.
+# "sparv preload --socket ~/sparv-pipeline/sparv.socket --processes 4" running with the
+# same (yaml) confiugration, and that's not being handled right now.
+# If you want sparv to run with multiple processes use eg. -j 4.
+SPARV_COMMAND = (
+    "/app/sparv/venv/bin/python -u -m sparv -j 2"  # Command for calling Sparv
+)
+
+SPARV_RUN = "run --json-log --log-to-file info"
+MEMCACHED_SOCKET = "memcached.sock"
+MINK_SECRET_KEY = "{{ lookup('passwordstore', 'lb_passwords/mink/MINK_SECRET_KEY')}}"
+SBAUTH_API_KEY = "{{ mink_api_key }}"
+SBAUTH_PUBKEY_FILE = "keys/public_key.pem"
+SBAUTH_URL = "https://www.kielipankki.fi/future/mink/auth/resource/"
+MINK_URL = "https://www.kielipankki.fi/future/mink/api"
+SPARV_DEFAULT_STRIX_INSTALLS = []  # No strix targets please
+SPARV_DEFAULT_STRIX_UNINSTALLS = []
+SPARV_DEFAULT_EXPORTS = [
+    "xml_export:pretty",
+    "csv_export:csv",
+]  # Default export format to create if nothing is specified
+#     "stats_export:freq_list" needed to be removed due to no Strix (I think)
+
+
+SPARV_DEFAULT_KORP_INSTALLS = [
+    "korp:install_config",
+]
+# The following weren't working at demo time, probably DB issues
+#     "korp:install_timespan",
+#     "korp:install_lemgrams",
+
+SPARV_DEFAULT_KORP_UNINSTALLS = [
+    "cwb:uninstall_corpus",
+    "korp:uninstall_config",
+]  # Default Korp uninstall targets
+#     "korp:uninstall_timespan",
+#     "korp:uninstall_lemgrams",
