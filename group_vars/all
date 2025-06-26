@@ -9,3 +9,4 @@ auth_dir: "{{ app_dir }}/auth"
 mink_api_key: "{{ lookup('passwordstore', 'lb_passwords/mink/API_KEY')}}"
 
 mink_backend_socket_path: /run/mink-backend
+auth_socket_path: /run/oauth.sock
