@@ -1,7 +1,7 @@
-# Obviously not how we want to do this forever..
-SSH_KEY = "~/.ssh/localroot_id_rsa"
+# The private key corresponding to the public key installed on the Korp host
+SSH_KEY = "~/.ssh/mink_korp_id_rsa"
 SPARV_HOST = "localhost"
-SPARV_USER = "root"
+SPARV_USER = "sparv"
 
 # Sparv's 'run' command. The default includes "--socket ~/sparv-pipeline/sparv.socket"
 # but that will only work if there's eg.
@@ -17,8 +17,8 @@ MEMCACHED_SOCKET = "memcached.sock"
 MINK_SECRET_KEY = "{{ lookup('passwordstore', 'lb_passwords/mink/MINK_SECRET_KEY')}}"
 SBAUTH_API_KEY = "{{ mink_api_key }}"
 SBAUTH_PUBKEY_FILE = "keys/public_key.pem"
-SBAUTH_URL = "https://www.kielipankki.fi/future/mink/auth/resource/"
-MINK_URL = "https://www.kielipankki.fi/future/mink/api"
+SBAUTH_URL = "/auth/resource/"
+MINK_URL = "/future/mink/api"
 SPARV_DEFAULT_STRIX_INSTALLS = []  # No strix targets please
 SPARV_DEFAULT_STRIX_UNINSTALLS = []
 SPARV_DEFAULT_EXPORTS = [

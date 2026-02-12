@@ -25,6 +25,13 @@
         generate_ssh_key: yes
         group: gunicorn
 
+    - name: "Add sparv user"
+      ansible.builtin.user:
+        name: sparv
+        state: present
+        generate_ssh_key: yes
+        group: gunicorn
+
     - name: "Ensure directories"
       ansible.builtin.file:
         path: "{{ item }}"
