@@ -32,6 +32,21 @@
         generate_ssh_key: yes
         group: gunicorn
 
+    - name: "Collect sparv user's public key"
+      ansible.core.slurp:
+        src: /home/sparv/ssh/id_rsa.pub
+      register: sparv_ssh_pub
+
+    - name: "Install sparv user's key in Korp"
+      authorized_key:
+        user: mink
+        key: "{{ sparv_ssh_pub.content | b64decode }}"
+        state: present
+      delegate_to:
+        "{{ item }}"
+      loop: "{{ groups['korp'] | default([]) }}"
+      when: groups['korp'] is defined and groups['korp'] | length > 0
+
     - name: "Ensure directories"
       ansible.builtin.file:
         path: "{{ item }}"
