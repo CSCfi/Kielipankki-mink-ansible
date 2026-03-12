@@ -10,20 +10,48 @@
     - "{{ sparv_dir }}"
     - "{{ sparv_dir }}/test"
     - "{{ data_root }}/sparv"
+    - "{{ trankit_dir }}"
+    - "{{ trankit_cache_dir }}"
+    - "{{ trankit_temp_dir }}"
 
-- name: Install sparv, pin dependencies due to sparv reqs
-  ansible.builtin.pip:
-    name: "{{ item }}"
-    virtualenv: "{{ sparv_dir }}/venv"
-  loop:
-    - torch==2.5.1
-    - sparv-pipeline
+- name: Check if uv is installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/uv
+  register: uv_stat
+
+- name: Install uv
+  ansible.builtin.shell: curl -LsSf https://astral.sh/uv/install.sh | sh
+  when: not uv_stat.stat.exists
+  environment:
+    UV_INSTALL_DIR: /usr/local/bin
+
+- name: Clone sparv-pipeline repository
+  ansible.builtin.git:
+    repo: "{{ sparv_repo }}"
+    version: "{{ sparv_version }}"
+    dest: "{{ sparv_src_dir }}"
+    umask: "0022"
+    force: yes
+
+- name: Install custom pyproject.toml for sparv
+  ansible.builtin.template:
+    src: pyproject.toml
+    dest: "{{ sparv_src_dir }}/pyproject.toml"
+
+- name: Install sparv and dependencies
+  ansible.builtin.shell: UV_PROJECT_ENVIRONMENT={{ sparv_dir }}/venv UV_PYTHON_INSTALL_DIR=/usr/local/share/uv/python /usr/local/bin/uv --directory {{ sparv_src_dir }} sync --python 3.13
+  notify: restart memcached
 
 - name: Configure sparv datadir
-  ansible.builtin.shell: |
-    source {{ sparv_dir }}/venv/bin/activate &&
-    sparv setup --dir /root/sparv-pipeline
-    
+  ansible.builtin.shell: "{{ sparv_dir }}/venv/bin/sparv setup --dir {{ sparv_datadir }}"
+  become_user: sparv
+
+- name: Deploy sparv config
+  ansible.builtin.template:
+    src: config.yaml
+    dest: "{{ sparv_datadir }}/config/config.yaml"
+  notify: restart memcached
+
 - name: Fetch example corpora
   ansible.builtin.unarchive:
     dest: "{{ sparv_dir }}/test"
@@ -36,3 +64,50 @@
     command -v cwb-encode > /dev/null ||
     { curl -L -o /tmp/cwb.rpm {{ cwb_rpm_url }} ; dnf localinstall -y /tmp/cwb.rpm;
     ln -sf /usr/share/cwb/registry/ {{ cwb_registry }}; }
+
+- name: Clone trankit repository
+  ansible.builtin.git:
+    repo: "{{ trankit_repo }}"
+    version: "{{ trankit_version }}"
+    dest: "{{ trankit_dir }}/trankit"
+    umask: "0022"
+    force: yes
+
+- name: Modify trankit setup.py - update numpy constraint
+  ansible.builtin.replace:
+    path: "{{ trankit_dir }}/trankit/setup.py"
+    regexp: "'numpy'"
+    replace: "'numpy<2'"
+
+- name: Modify trankit setup.py - update torch constraint
+  ansible.builtin.replace:
+    path: "{{ trankit_dir }}/trankit/setup.py"
+    regexp: "'torch>=1\\.6\\.0,<=2\\.0\\.1'"
+    replace: "'torch>=1.6.0,<=2.5.1'"
+
+- name: Modify trankit setup.py - pin transformers version
+  ansible.builtin.replace:
+    path: "{{ trankit_dir }}/trankit/setup.py"
+    regexp: "'transformers'"
+    replace: "'transformers==4.48.3'"
+
+- name: Install trankit into sparv venv
+  ansible.builtin.shell: VIRTUAL_ENV={{ sparv_dir }}/venv /usr/local/bin/uv pip install -e {{ trankit_dir }}/trankit
+
+- name: Copy trankit test input files
+  ansible.builtin.copy:
+    src: "test_input_{{ item }}.txt"
+    dest: "{{ trankit_temp_dir }}/test_input_{{ item }}.txt"
+  loop: "{{ trankit_languages }}"
+
+- name: Download trankit models for each language
+  ansible.builtin.shell: |
+    {{ sparv_dir }}/venv/bin/python -m trankit \
+      --input {{ trankit_temp_dir }}/test_input_{{ item }}.txt \
+      --output_dir {{ trankit_temp_dir }}/test_output \
+      --input_format plaindoc \
+      --cache_dir {{ trankit_cache_dir }} \
+      --lang {{ item }}
+  args:
+    creates: "{{ trankit_cache_dir }}/xlm-roberta-base/{{ item }}"
+  loop: "{{ trankit_languages }}"

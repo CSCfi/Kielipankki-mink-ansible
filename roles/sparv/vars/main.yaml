@@ -3,3 +3,15 @@
 cwb_registry: /data/cwb_registry
 cwb_rpm_url: https://sourceforge.net/projects/cwb/files/cwb/cwb-3.5/rpm/cwb-3.5.0-1.fc35.x86_64.rpm/download
 sparv_example_corpora_url: https://github.com/spraakbanken/sparv-pipeline/releases/latest/download/example_corpora.zip
+sparv_repo: https://github.com/CSCfi/Kielipankki-sparv.git #https://github.com/spraakbanken/sparv-pipeline.git
+sparv_version: better-annotator-parsing
+sparv_src_dir: "{{ sparv_dir }}/sparv-pipeline"
+
+trankit_repo: https://github.com/nlp-uoregon/trankit.git
+trankit_version: master
+trankit_cache_dir: "{{ trankit_dir }}/cache"
+trankit_temp_dir: "{{ trankit_dir }}/temp"
+trankit_languages:
+  - finnish
+  - english
+  - swedish
