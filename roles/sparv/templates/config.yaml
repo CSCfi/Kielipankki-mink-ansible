@@ -1,0 +1,25 @@
+disabled_modules:
+  - stanza
+  - malt
+  - lexical_classes
+  - phrase_structure
+  - saldo
+  - sensaldo
+  - swener
+  - wsd
+  - hunpos
+  - stanford
+
+hidden_modules:
+  - korp
+  - geo
+  - misc
+  - segment
+  - cwb
+  - dateformat
+  - stats_export
+
+disabled_languages:
+  - ron
+  - slk
+
