@@ -17,6 +17,16 @@ SBAUTH_API_KEY = "{{ mink_api_key }}"
 SBAUTH_PUBKEY_FILE = "keys/public_key.pem"
 SBAUTH_URL = "https://www.kielipankki.fi/api/auth/resource/"
 MINK_URL = "https://www.kielipankki.fi/future/mink/api"
+
+# Korp and CWB configuration
+KORP_CONFIG_DIR = "/v/corpora/config"
+CWB_REMOTE_REGISTRY_DIR = "/v/corpora/registry"
+CWB_REMOTE_DATA_DIR = "/v/corpora/data"
+KORP_REMOTE_HOST = "mink@{{ groups['korp'][0] }}"
+CWB_REMOTE_HOST = "mink@{{ groups['korp'][0] }}"
+
+SPARV_ANNOTATOR_SEED_LANGUAGES = ["fin", "swe", "eng"]
+
 SPARV_DEFAULT_STRIX_INSTALLS = []  # No strix targets please
 SPARV_DEFAULT_STRIX_UNINSTALLS = []
 SPARV_DEFAULT_EXPORTS = [
