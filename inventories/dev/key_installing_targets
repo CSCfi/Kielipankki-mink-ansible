@@ -1,0 +1,7 @@
+[korp]
+195.148.21.52 # future
+
+[korp:vars]
+ansible_user=almalinux
+mink_korp_public_key_path=/home/mink/.ssh/id_rsa.pub
+
