@@ -8,11 +8,9 @@ SPARV_USER = "sparv"
 # "sparv preload --socket ~/sparv-pipeline/sparv.socket --processes 4" running with the
 # same (yaml) confiugration, and that's not being handled right now.
 # If you want sparv to run with multiple processes use eg. -j 4.
-SPARV_COMMAND = (
-    "/app/sparv/venv/bin/python -u -m sparv -j 2"  # Command for calling Sparv
-)
-
+SPARV_COMMAND = "{{ sparv_dir }}/venv/bin/sparv"  # -j 2
 SPARV_RUN = "run --json-log --log-to-file info"
+SPARV_ENVIRON = "SPARV_DATADIR={{ sparv_datadir }}"
 MEMCACHED_SOCKET = "memcached.sock"
 MINK_SECRET_KEY = "{{ lookup('passwordstore', 'lb_passwords/mink/MINK_SECRET_KEY')}}"
 SBAUTH_API_KEY = "{{ mink_api_key }}"
