@@ -5,6 +5,8 @@ data_root: /data
 mink_backend_dir: "{{ app_dir }}/mink-backend"
 mink_frontend_dir: "{{ app_dir }}/mink-frontend"
 sparv_dir: "{{ app_dir }}/sparv"
+sparv_datadir: "{{ data_root }}/sparv"
+trankit_dir: "{{ app_dir }}/trankit"
 auth_dir: "{{ app_dir }}/auth"
 mink_api_key: "{{ lookup('passwordstore', 'lb_passwords/mink/API_KEY')}}"
 
