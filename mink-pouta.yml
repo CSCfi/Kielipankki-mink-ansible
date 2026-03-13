@@ -30,15 +30,25 @@
         name: sparv
         state: present
         generate_ssh_key: yes
-        group: gunicorn
+
+    - name: "Collect gunicorn user's public key"
+      ansible.builtin.slurp:
+        src: /home/gunicorn/.ssh/id_rsa.pub
+      register: gunicorn_ssh_pub
 
     - name: "Collect sparv user's public key"
-      ansible.core.slurp:
-        src: /home/sparv/ssh/id_rsa.pub
+      ansible.builtin.slurp:
+        src: /home/sparv/.ssh/id_rsa.pub
       register: sparv_ssh_pub
 
+    - name: "Authorize gunicorn to make ssh connections to localhost as sparv"
+      ansible.builtin.authorized_key:
+        user: sparv
+        key: "{{ gunicorn_ssh_pub.content | b64decode }}"
+        state: present
+
     - name: "Install sparv user's key in Korp"
-      authorized_key:
+      ansible.builtin.authorized_key:
         user: mink
         key: "{{ sparv_ssh_pub.content | b64decode }}"
         state: present
