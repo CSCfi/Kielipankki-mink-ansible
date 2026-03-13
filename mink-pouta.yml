@@ -108,7 +108,7 @@
       tags: mink-backend
     - role: mink-frontend
       tags: mink-frontend
-    - role: auth
-      tags: auth
+    - role: trankit
+      tags: trankit
     # - role: firewall
     #   tags: firewall
