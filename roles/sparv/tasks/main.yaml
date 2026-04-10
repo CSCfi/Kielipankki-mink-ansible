@@ -13,6 +13,7 @@
     - "{{ trankit_dir }}"
     - "{{ trankit_cache_dir }}"
     - "{{ trankit_temp_dir }}"
+    - "{{ sparv_datadir }}/bin"
 
 - name: Check if uv is installed
   ansible.builtin.stat:
@@ -58,6 +59,16 @@
     remote_src: true
     src: "{{ sparv_example_corpora_url }}"
     creates: "{{ sparv_dir }}/test/example_corpora"
+
+- name: Install TreeTagger binary
+  ansible.builtin.shell: |
+    tmpdir=$(mktemp -d)
+    curl -L -o "$tmpdir/treetagger.tar.gz" {{ treetagger_url }}
+    tar -xzf "$tmpdir/treetagger.tar.gz" -C "$tmpdir" tree-tagger-{{ treetagger_version }}/bin/tree-tagger
+    install -m 0755 "$tmpdir/tree-tagger-{{ treetagger_version }}/bin/tree-tagger" {{ sparv_datadir }}/bin/tree-tagger
+    rm -rf "$tmpdir"
+  args:
+    creates: "{{ sparv_datadir }}/bin/tree-tagger"
 
 - name: Install cwb
   shell: |
