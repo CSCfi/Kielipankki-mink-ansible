@@ -7,6 +7,9 @@ sparv_repo: https://github.com/CSCfi/Kielipankki-sparv.git #https://github.com/s
 sparv_version: better-annotator-parsing
 sparv_src_dir: "{{ sparv_dir }}/sparv-pipeline"
 
+treetagger_version: linux-3.2.5
+treetagger_url: "https://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tree-tagger-{{ treetagger_version }}.tar.gz"
+
 trankit_repo: https://github.com/nlp-uoregon/trankit.git
 trankit_version: master
 trankit_cache_dir: "{{ trankit_dir }}/cache"
