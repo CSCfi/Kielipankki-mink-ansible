@@ -53,6 +53,12 @@
     dest: "{{ sparv_datadir }}/config/config.yaml"
   notify: restart memcached
 
+- name: Deploy sparv default corpus config
+  ansible.builtin.template:
+    src: config_default.yaml
+    dest: "{{ sparv_datadir }}/config/config_default.yaml"
+  notify: restart memcached
+
 - name: Fetch example corpora
   ansible.builtin.unarchive:
     dest: "{{ sparv_dir }}/test"
