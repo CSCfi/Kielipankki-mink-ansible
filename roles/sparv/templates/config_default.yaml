@@ -1,0 +1,21 @@
+# Default corpus configuration inherited by all Mink corpora.
+# Sparv merges this into every corpus config automatically.
+
+korp:
+  protected: true
+  modes:
+    - name: mink
+  keep_undefined_annotations: true
+  languages:
+    - swe
+    - eng
+    - fin
+  remote_host: "mink@{{ groups['korp'][0] }}"
+  config_dir: "{{ korp_config_dir }}"
+  annotation_definitions:
+    <token>:trankit.deprel: deprel_trankit
+
+cwb:
+  remote_host: "mink@{{ groups['korp'][0] }}"
+  remote_registry_dir: "{{ cwb_registry_dir }}"
+  remote_data_dir: "{{ cwb_data_dir }}"

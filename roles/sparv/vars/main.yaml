@@ -18,3 +18,7 @@ trankit_languages:
   - finnish
   - english
   - swedish
+
+korp_config_dir: /v/corpora/config
+cwb_registry_dir: /v/corpora/registry
+cwb_data_dir: /v/corpora/data
