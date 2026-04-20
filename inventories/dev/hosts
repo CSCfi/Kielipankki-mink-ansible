@@ -1,6 +1,8 @@
 all:
   vars:
     external_ip: 195.148.30.10
+    koivu_retention_months: 1
+    protected_host: false
   hosts:
     localhost:
       ansible_connection: local
