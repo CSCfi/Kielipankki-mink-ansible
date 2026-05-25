@@ -23,3 +23,16 @@
       dest: /etc/httpd/conf.d/backend_proxy.conf
     - src: frontend_routes.conf
       dest: /etc/httpd/conf.d/frontend_routes.conf
+    - src: access_log.conf.j2
+      dest: /etc/httpd/conf.d/access_log.conf
+
+# Disable the package-default CustomLog so the one in conf.d/access_log.conf
+# (which honors the "dontlog" env var) is the only access logger. Matches the
+# active line shipped by httpd; the commented "common" variant above it is
+# left alone. Idempotent: re-runs no-op once the line is commented out.
+- name: "Disable default CustomLog in httpd.conf"
+  ansible.builtin.replace:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^(\s*)CustomLog "logs/access_log" combined\s*$'
+    replace: '\1#CustomLog "logs/access_log" combined  # disabled by mink ansible; see conf.d/access_log.conf'
+  notify: restart httpd

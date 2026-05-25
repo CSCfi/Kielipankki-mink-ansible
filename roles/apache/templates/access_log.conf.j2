@@ -1,0 +1,8 @@
+# Re-defines the package-default access log so it can honor "dontlog".
+# The default CustomLog in /etc/httpd/conf/httpd.conf is commented out by
+# the role's tasks; do not re-enable it without disabling this one.
+
+# Add SetEnvIf rules here for any route we want kept out of access_log.
+SetEnvIf Request_URI "/mink/api/advance-queue$" dontlog
+
+CustomLog "logs/access_log" combined env=!dontlog
