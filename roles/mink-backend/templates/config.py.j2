@@ -17,6 +17,9 @@ SBAUTH_API_KEY = "{{ mink_api_key }}"
 SBAUTH_PUBKEY_FILE = "keys/public_key.pem"
 SBAUTH_URL = "https://www.kielipankki.fi/api/auth/resource/"
 MINK_URL = "https://www.kielipankki.fi/future/mink/api"
+# queue_manager.py uses this to call /advance-queue locally via Apache's
+# global ProxyPass to the unix socket, avoiding the public proxy hop.
+MINK_INTERNAL_URL = "http://127.0.0.1/mink/api"
 
 # Korp and CWB configuration
 KORP_CONFIG_DIR = "/v/corpora/config"
