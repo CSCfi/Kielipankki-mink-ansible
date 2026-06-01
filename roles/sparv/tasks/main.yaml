@@ -70,8 +70,8 @@
   ansible.builtin.shell: |
     tmpdir=$(mktemp -d)
     curl -L -o "$tmpdir/treetagger.tar.gz" {{ treetagger_url }}
-    tar -xzf "$tmpdir/treetagger.tar.gz" -C "$tmpdir" tree-tagger-{{ treetagger_version }}/bin/tree-tagger
-    install -m 0755 "$tmpdir/tree-tagger-{{ treetagger_version }}/bin/tree-tagger" {{ sparv_datadir }}/bin/tree-tagger
+    tar -xzf "$tmpdir/treetagger.tar.gz" -C "$tmpdir" bin/tree-tagger
+    install -m 0755 "$tmpdir/bin/tree-tagger" {{ sparv_datadir }}/bin/tree-tagger
     rm -rf "$tmpdir"
   args:
     creates: "{{ sparv_datadir }}/bin/tree-tagger"
