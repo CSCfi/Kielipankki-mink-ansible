@@ -45,12 +45,29 @@
       ansible.builtin.authorized_key:
         user: sparv
         key: "{{ gunicorn_ssh_pub.content | b64decode }}"
+        # This hop is always loopback (SPARV_HOST=localhost), so pin it there.
+        key_options: 'from="127.0.0.1,::1"'
         state: present
+
+    - name: "Require a pinned source IP before installing the Korp key"
+      ansible.builtin.assert:
+        that:
+          - mink_source_ip is defined
+          - mink_source_ip | string | length > 0
+        fail_msg: >-
+          mink_source_ip must be set (in this inventory) to the address the Korp host
+          sees when Mink connects, so the sparv->mink@korp key can be locked to it.
+          Use Mink's internal IP if it shares a Pouta project with Korp, otherwise its
+          external/floating IP. See inventories/*/hosts.
+      when: groups['korp'] is defined and groups['korp'] | length > 0
 
     - name: "Install sparv user's key in Korp"
       ansible.builtin.authorized_key:
         user: mink
         key: "{{ sparv_ssh_pub.content | b64decode }}"
+        # Lock this key to the Mink machine's source IP so a leaked key cannot be
+        # used from anywhere else. mink_source_ip is set per inventory.
+        key_options: 'from="{{ mink_source_ip }}"'
         state: present
       delegate_to:
         "{{ item }}"
