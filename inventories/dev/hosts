@@ -1,6 +1,17 @@
 all:
   vars:
     external_ip: 195.148.30.10
+    # Source IP the Korp host sees when the Mink machine connects over SSH. Used to
+    # lock the sparv->mink@korp key to this origin via from="..." in authorized_keys,
+    # so a leaked key is useless from anywhere else. Set this PER INVENTORY to the
+    # address as Korp sees it (post-NAT); there is no safe universal default:
+    #   - same Pouta project as Korp (e.g. future Korp) -> Mink's INTERNAL/fixed IP
+    #   - production (non-Pouta) or cross-project Pouta  -> Mink's EXTERNAL/floating IP
+    # May be a comma-separated list or CIDR. Verify with:
+    #   ssh mink@<korp-host> 'echo $SSH_CONNECTION'   # first field is the source IP
+    # Dev has no korp group so this is never consumed here; it defaults to the
+    # external IP only as an example of the production/cross-network case.
+    mink_source_ip: "{{ external_ip }}"
     koivu_retention_months: 1
     protected_host: false
   hosts:
