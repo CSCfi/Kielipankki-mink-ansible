@@ -110,12 +110,6 @@
       ansible.builtin.systemd:
         name: memcached
         state: restarted
-      notify: populate sparv-languages cache
-
-    - name: populate sparv-languages cache
-      ansible.builtin.command: >
-        curl --unix-socket {{ mink_backend_socket_path }}
-        "http://localhost/sparv-languages?annotators=true"
   roles:
     - role: apache
       tags: apache
