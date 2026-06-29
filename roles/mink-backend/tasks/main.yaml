@@ -58,4 +58,18 @@
     - mink-backend
     - mink-manager
     - socat
+# Regenerate the durable Sparv capability listings on every deploy. This queries
+# the Sparv host over SSH and writes the JSON files the backend reads, so the
+# create-corpus view is instant and correct regardless of memcached. Sparv's
+# offerings only change on deploy, so generating here (rather than per request or
+# per boot) is exactly right. Runs as gunicorn (whose key may reach the Sparv
+# host) after the Sparv role earlier in the play has installed the pipeline.
+# Independent of the running backend: the script boots its own app context.
+- name: Generate Sparv capability listings
+  ansible.builtin.command: "{{ mink_backend_dir }}/venv/bin/python generate_capabilities.py"
+  args:
+    chdir: "{{ mink_backend_dir }}"
+  become: true
+  become_user: gunicorn
+  changed_when: true
 
