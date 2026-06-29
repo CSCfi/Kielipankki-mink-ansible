@@ -13,7 +13,12 @@ korp:
   remote_host: "mink@{{ groups['korp'][0] }}"
   config_dir: "{{ korp_config_dir }}"
   annotation_definitions:
-    <token>:trankit.deprel: deprel_trankit
+    # trankit attrs only exist for trankit languages, which all bind <token> to
+    # trankit.token, so these are correct for eng/fin/swe and inert elsewhere.
+    # There might be a better way to smuggle these in, but I will revisit that..
+    trankit.token:trankit.deprel: deprel_trankit
+    trankit.token:trankit.ne_type: ne_type_conll
+    trankit.token:trankit.ne_part: ner_bioes
 
 cwb:
   remote_host: "mink@{{ groups['korp'][0] }}"
