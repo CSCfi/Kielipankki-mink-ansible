@@ -1,2 +1,2 @@
 python-openstackclient
-ansible
+ansible>=14.3
